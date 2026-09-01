@@ -5,3 +5,6 @@ __pycache__/
 bin/
 obj/
 .env
+
+# Zipped folders, usually made to hand a sample to somebody. Not repository content.
+*.zip

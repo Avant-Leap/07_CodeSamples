@@ -99,13 +99,17 @@ questions on each half.
 
 ## What "done" means for a sample
 
-A sample in this repository is finished when all five hold:
+A sample in this repository is finished when all seven hold:
 
 1. It runs from a clean clone with a documented setup, on a machine that is not ours.
 2. Every tool description has all three sentences: what it does, when to use it, **when not to**.
 3. It returns the standard envelope on success *and* failure.
 4. It has a test asserting the **failure** path, not only the happy one.
-5. Its token cost for one successful run is measured and written in the README.
+5. Its token cost for one successful run is **measured**, in the manifest's `tokenBudget` —
+   `toolSurfaceTokens`, `medianRunTokens`, `medianTurns`. The validator fails a manifest without it.
+6. Its `config/` holds every rule that governs it, as **data**, not as code.
+7. Its `SKILL.md` names the functions to replace, so a reader can tell scaffolding from stubs without
+   reading the code first.
 
 Item 5 is the one that is new, and it is the one this session argues matters most.
 
@@ -116,6 +120,24 @@ Item 5 is the one that is new, and it is the one this session argues matters mos
 | # | Question | Owner |
 |---|---|---|
 | ~~1~~ | ~~Scope per folder~~ — **settled: all four are runnable.** 01 is a C# .NET 8 host, 02 and 03 share one Python host, 04 is a script. The external work (Revit, Dynamo, APS) is faked so every folder runs on any machine; `SKILL.md` in each says exactly what to replace | — |
-| 2 | Where these are published, given the DevCon repo stays private | Enrique |
-| 3 | Licence for each folder | Enrique |
+| ~~2~~ | ~~Where these are published~~ — **settled: this repository, public.** `github.com/Avant-Leap/07_CodeSamples` | — |
+| ~~3~~ | ~~Licence~~ — **settled: MIT for the whole repository.** See below | — |
 | 4 | Which folder carries the recorded 40-second demo clip | Enrique |
+
+---
+
+## Licence
+
+**MIT.** See [`LICENSE`](LICENSE).
+
+Chosen so you can copy `00_shared-scaffold/contracts/` straight into a commercial add-in without
+starting a legal conversation. That is the point of publishing this at all — the envelope and the
+process manifest are only worth anything if they spread, and a copyleft licence on a schema file is a
+landmine for anyone shipping a product.
+
+Two things the licence does not cover, stated plainly:
+
+- **Trademarks.** "AvantLeap", "Autodesk", "Revit", "Dynamo" and product names generally are not
+  licensed here. Reuse the code; do not imply an endorsement.
+- **Warranty.** Read the AS-IS clause before wiring any of this into a real release pipeline. These
+  are teaching samples with the external work deliberately faked. What is real is the *shape*.
