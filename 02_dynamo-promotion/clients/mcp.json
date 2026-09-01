@@ -1,0 +1,13 @@
+{
+  "$comment": "One host, one manifest, one process. To expose a different process, change the last argument -- not the tools folder.",
+  "mcpServers": {
+    "graph-catalogue": {
+      "command": "python",
+      "args": [
+        "<ABSOLUTE>/07_CodeSamples/00_shared-scaffold/host_python/server.py",
+        "<ABSOLUTE>/07_CodeSamples/02_dynamo-promotion",
+        "p2-graph-catalogue"
+      ]
+    }
+  }
+}

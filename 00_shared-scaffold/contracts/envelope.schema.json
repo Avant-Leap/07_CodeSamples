@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://avantleap.dev/as2698/envelope.schema.json",
+  "title": "MCP tool return envelope",
+  "description": "Every tool on every server returns this shape, on both paths. One envelope across all four samples is what makes them comparable, and it is the cheapest thing to get right on day one. Error codes are a CLOSED enum: adding one is a specification change, not a local decision, because the moment each server invents its own codes an agent can no longer reason about failure across a chain.",
+
+  "oneOf": [
+    { "$ref": "#/$defs/success" },
+    { "$ref": "#/$defs/failure" }
+  ],
+
+  "$defs": {
+    "success": {
+      "type": "object",
+      "required": ["ok", "data"],
+      "additionalProperties": false,
+      "properties": {
+        "ok": { "const": true },
+        "data": {
+          "description": "The result. Shape is per-tool and declared in that tool's outputSchema.",
+          "type": ["object", "array", "string", "number", "boolean", "null"]
+        },
+        "warnings": {
+          "description": "Present on PARTIAL success. A run that half-succeeded is not a failure — return what worked and what did not. The tool description must say these have to be shown to the user, or they will be swallowed.",
+          "type": "array",
+          "items": { "$ref": "#/$defs/warning" }
+        }
+      }
+    },
+
+    "failure": {
+      "type": "object",
+      "required": ["ok", "code", "message", "retryable"],
+      "additionalProperties": false,
+      "properties": {
+        "ok": { "const": false },
+        "code": { "$ref": "#/$defs/errorCode" },
+        "message": {
+          "description": "One sentence, for a human. Never a stack trace, an internal path, or a credential fragment.",
+          "type": "string",
+          "minLength": 1
+        },
+        "retryable": {
+          "description": "REQUIRED. This is what the client acts on — a code alone gives it nothing to decide with. True means the same call may succeed later; the caller should back off and retry with the SAME requestKey.",
+          "type": "boolean"
+        },
+        "retryAfterMs": {
+          "description": "Optional hint when retryable is true. Prefer this over letting the client guess.",
+          "type": "integer",
+          "minimum": 0
+        },
+        "detail": {
+          "description": "Structured context the agent can reason about — which item failed, which field was invalid. Not free prose.",
+          "type": "object"
+        }
+      }
+    },
+
+    "warning": {
+      "type": "object",
+      "required": ["code", "message"],
+      "properties": {
+        "code": { "$ref": "#/$defs/errorCode" },
+        "message": { "type": "string" },
+        "item": {
+          "description": "Which element, file or row this warning is about.",
+          "type": ["string", "integer"]
+        }
+      }
+    },
+
+    "errorCode": {
+      "description": "The closed enum. Adding a member is a specification change.",
+      "enum": [
+        "BAD_INPUT",
+        "NOT_FOUND",
+        "PRECONDITION_FAILED",
+        "NO_ACTIVE_DOCUMENT",
+        "PERMISSION_DENIED",
+        "UNAUTHENTICATED",
+        "CONFLICT",
+        "PREVIEW_REQUIRED",
+        "PREVIEW_EXPIRED",
+        "TIMEOUT",
+        "RATE_LIMITED",
+        "UPSTREAM_ERROR",
+        "PARTIAL_FAILURE",
+        "UNSUPPORTED_VERSION",
+        "INTERNAL"
+      ]
+    }
+  },
+
+  "examples": [
+    { "ok": true, "data": { "roomsRenumbered": 42 } },
+
+    {
+      "ok": true,
+      "data": { "roomsRenumbered": 42, "skipped": 3 },
+      "warnings": [
+        { "code": "PARTIAL_FAILURE", "message": "Unplaced rooms are skipped, not renumbered.", "item": "Room 1204" }
+      ]
+    },
+
+    {
+      "ok": false,
+      "code": "NO_ACTIVE_DOCUMENT",
+      "message": "This tool needs an open document. Ask the user to open the model and call again.",
+      "retryable": true
+    },
+
+    {
+      "ok": false,
+      "code": "TIMEOUT",
+      "message": "The host did not respond within 30s. It may be in a modal dialog or a heavy regeneration.",
+      "retryable": true,
+      "retryAfterMs": 15000,
+      "detail": { "waitedMs": 30000, "stage": "bridge" }
+    },
+
+    {
+      "ok": false,
+      "code": "PREVIEW_REQUIRED",
+      "message": "This tool writes. Call the preview tool first and pass its token to confirm.",
+      "retryable": false,
+      "detail": { "previewTool": "validate_addin" }
+    }
+  ]
+}

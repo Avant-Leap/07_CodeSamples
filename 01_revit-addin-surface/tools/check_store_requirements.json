@@ -1,0 +1,30 @@
+{
+  "name": "check_store_requirements",
+  "description": {
+    "what": "Previews a submission: manifest fields, entitlement consistency, privacy URL and character limits.",
+    "when": "Use immediately before package_release. Its token is what authorises that call.",
+    "whenNot": "Not a build check. It assumes the artefacts already exist.",
+    "requires": [
+      "A completed build"
+    ]
+  },
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "productPath": {
+        "type": "string"
+      },
+      "releaseVersion": {
+        "type": "string",
+        "pattern": "^[0-9]+[.][0-9]+[.][0-9]+$"
+      }
+    },
+    "required": [
+      "productPath"
+    ]
+  },
+  "sideEffect": "read",
+  "blastRadius": "None. Read-only, plus one HTTP HEAD to the privacy-policy URL.",
+  "timeoutMs": 30000,
+  "failureTest": "tests/test_check_store_requirements.py"
+}

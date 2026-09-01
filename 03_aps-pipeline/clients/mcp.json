@@ -1,0 +1,13 @@
+{
+  "$comment": "Same host binary as 02. That is the point: the contract sits above the implementation, so the host does not know which server it is running.",
+  "mcpServers": {
+    "cloud-chain": {
+      "command": "python",
+      "args": [
+        "<ABSOLUTE>/07_CodeSamples/00_shared-scaffold/host_python/server.py",
+        "<ABSOLUTE>/07_CodeSamples/03_aps-pipeline",
+        "p3-cloud-chain"
+      ]
+    }
+  }
+}

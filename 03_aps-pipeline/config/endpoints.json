@@ -1,0 +1,20 @@
+{
+  "$comment": "Every external domain this server contacts. The Marketplace manifest demands the same list, so keeping it here means you write it once.",
+  "endpoints": [
+    {
+      "host": "developer.api.autodesk.com",
+      "purpose": "APS \u2014 auth, Data Management, Model Derivative, Design Automation",
+      "protocol": "https"
+    },
+    {
+      "host": "cdn.derivative.autodesk.com",
+      "purpose": "derivative download",
+      "protocol": "https"
+    }
+  ],
+  "aiProviders": [
+    {
+      "$comment": "Declare every provider that sees user data, describe what is sent, obtain consent."
+    }
+  ]
+}

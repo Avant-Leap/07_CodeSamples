@@ -1,0 +1,144 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://avantleap.dev/as2698/process.schema.json",
+  "title": "Process manifest",
+  "description": "A server does not expose functions directly. It loads ONE manifest at a time, and the manifest selects which functions become visible tools. That is what keeps a large function catalogue from becoming a large tool surface — the catalogue is a deployment fact, the manifest is a runtime fact, and only the second one costs you anything.",
+
+  "type": "object",
+  "required": ["id", "version", "name", "description", "trigger", "owner",
+               "deliverable", "acceptanceTest", "maxTools", "tools"],
+  "additionalProperties": false,
+
+  "properties": {
+    "id": {
+      "description": "Stable, kebab-case, never reused. Appears in every audit record.",
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+    },
+    "version": {
+      "description": "Semver. Bump minor to add a tool; bump major to remove or change one.",
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "name": { "type": "string", "minLength": 1 },
+    "description": { "type": "string", "minLength": 1 },
+
+    "trigger": {
+      "description": "What causes a person to run this. If you cannot name the moment, you have a capability rather than a process.",
+      "type": "string",
+      "minLength": 1
+    },
+    "owner": {
+      "description": "The ROLE that presses the button — not a person's name. 'BIM coordinator', 'release engineer'.",
+      "type": "string",
+      "minLength": 1
+    },
+    "deliverable": {
+      "description": "What exists afterwards that did not exist before.",
+      "type": "object",
+      "required": ["kind", "artifacts"],
+      "properties": {
+        "kind": { "enum": ["report", "artifact", "model-change", "report+artifact", "report+views"] },
+        "artifacts": { "type": "array", "items": { "type": "string" }, "minItems": 1 }
+      }
+    },
+    "acceptanceTest": {
+      "description": "THE LINE EVERYBODY LEAVES BLANK. How a non-technical reviewer confirms it worked, WITHOUT knowing how the result was produced. If you cannot write these, you do not have a process — you have a demo.",
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "minItems": 1
+    },
+
+    "maxTools": {
+      "description": "The ceiling for THIS surface. Going over is a diagnosis, not a failure: it means two processes are sharing one manifest and nobody has separated them yet.",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 6
+    },
+    "tools": {
+      "description": "Tool names visible when this manifest is loaded. Must not exceed maxTools.",
+      "type": "array",
+      "items": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" },
+      "minItems": 1,
+      "maxItems": 6,
+      "uniqueItems": true
+    },
+    "services": {
+      "description": "Shared capability called BY tools and NEVER by the agent. Infrastructure has no tools, it has a contract — an agent that can call a service directly is holding a parts bin rather than running a process.",
+      "type": "array",
+      "items": { "type": "string" },
+      "uniqueItems": true
+    },
+
+    "writes": {
+      "description": "Every write tool, with its preview partner. Generated as a PAIR or not generated. No convenience bypass — one bypass puts a hole in the audit trail nobody remembers.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["tool", "previewTool", "blastRadius"],
+        "properties": {
+          "tool": { "type": "string" },
+          "previewTool": { "type": "string" },
+          "blastRadius": {
+            "description": "The worst outcome of ONE confirmed call, in plain language.",
+            "type": "string"
+          },
+          "idempotencyKey": {
+            "description": "Required on anything that CREATES. Derived from intent — never random, never a timestamp.",
+            "type": "boolean"
+          }
+        }
+      }
+    },
+
+    "supportedVersions": {
+      "description": "An explicit LIST, never a range expression, and never narrowed in a minor release. Firms sit on a version for years and cannot upgrade mid-project.",
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1
+    },
+
+    "tokenBudget": {
+      "description": "Measured, not estimated. If this is unknown the process is not done.",
+      "type": "object",
+      "properties": {
+        "toolSurfaceTokens": { "type": "integer", "minimum": 0 },
+        "medianRunTokens": { "type": "integer", "minimum": 0 },
+        "medianTurns": { "type": "number", "minimum": 0 }
+      }
+    }
+  },
+
+  "examples": [
+    {
+      "id": "p8-addin-release-gate",
+      "version": "1.0.0",
+      "name": "Add-in Release Gate",
+      "description": "Validate, build, package and check an add-in before submission.",
+      "trigger": "A product is ready for submission, or a release branch is cut.",
+      "owner": "Release engineer",
+      "deliverable": {
+        "kind": "report+artifact",
+        "artifacts": ["validation-report.json", "installer", "submission-bundle"]
+      },
+      "acceptanceTest": [
+        "Every declared version in the matrix produced an installer.",
+        "The validation report lists zero blocking findings.",
+        "The privacy-policy URL in the manifest resolves with a 200."
+      ],
+      "maxTools": 6,
+      "tools": ["validate_addin", "build_all_versions", "package_release", "check_store_requirements"],
+      "services": ["rule-service"],
+      "writes": [
+        {
+          "tool": "package_release",
+          "previewTool": "check_store_requirements",
+          "blastRadius": "Writes files to the build output directory. No model, no remote system.",
+          "idempotencyKey": true
+        }
+      ],
+      "supportedVersions": ["2023", "2024", "2025", "2026", "2027"],
+      "tokenBudget": { "toolSurfaceTokens": 980, "medianRunTokens": 14200, "medianTurns": 2 }
+    }
+  ]
+}

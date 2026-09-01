@@ -1,0 +1,39 @@
+{
+  "name": "validate_addin",
+  "description": {
+    "what": "Checks a built add-in against the four causes that get submissions rejected.",
+    "when": "Use before packaging or submitting, and after any manifest or entitlement change.",
+    "whenNot": "Not for building. Call build_all_versions first if no output exists yet.",
+    "requires": [
+      "A completed build for at least one target version"
+    ],
+    "onPartialSuccess": "Returns every finding it can reach even if one check errors. Surface the warnings array rather than reporting a clean run."
+  },
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "productPath": {
+        "type": "string"
+      },
+      "targetVersions": {
+        "type": "array",
+        "items": {
+          "enum": [
+            "2023",
+            "2024",
+            "2025",
+            "2026",
+            "2027"
+          ]
+        }
+      }
+    },
+    "required": [
+      "productPath"
+    ]
+  },
+  "sideEffect": "read",
+  "blastRadius": "None. Reads files and makes one outbound HTTP HEAD request.",
+  "timeoutMs": 30000,
+  "failureTest": "tests/test_validate_addin.py"
+}

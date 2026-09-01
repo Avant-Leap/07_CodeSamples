@@ -1,0 +1,34 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    LO1 says C# .NET 8, so this is C# .NET 8.
+
+    No PackageReference. Not because dependencies are bad, but because a sample
+    whose interesting part is the protocol should not hide the protocol behind
+    an SDK. System.Text.Json is in the framework; that is all this needs.
+  -->
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>ReleaseGate</AssemblyName>
+    <RootNamespace>ReleaseGate</RootNamespace>
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
+
+  <!--
+    The contracts are the product. They travel with the binary so the server
+    reads the same JSON the validator checks and the Python host loads.
+  -->
+  <ItemGroup>
+    <None Include="..\manifests\**\*.json" CopyToOutputDirectory="PreserveNewest"
+          LinkBase="manifests" />
+    <None Include="..\tools\**\*.json" CopyToOutputDirectory="PreserveNewest"
+          LinkBase="tools" />
+    <None Include="..\config\**\*.json" CopyToOutputDirectory="PreserveNewest"
+          LinkBase="config" />
+  </ItemGroup>
+
+</Project>

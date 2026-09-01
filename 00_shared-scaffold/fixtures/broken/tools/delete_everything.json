@@ -1,0 +1,15 @@
+{
+  "name": "DeleteEverything",
+  "description": {
+    "what": "Deletes things."
+  },
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "target": {
+        "type": "string"
+      }
+    }
+  },
+  "sideEffect": "delete"
+}

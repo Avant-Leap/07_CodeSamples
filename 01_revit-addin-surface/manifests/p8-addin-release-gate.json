@@ -1,0 +1,57 @@
+{
+  "id": "p8-addin-release-gate",
+  "version": "1.0.0",
+  "name": "Add-in Release Gate",
+  "description": "Validate, build, package and check an add-in before submission.",
+  "trigger": "A product is ready for submission, or a release branch is cut.",
+  "owner": "Release engineer",
+  "deliverable": {
+    "kind": "report+artifact",
+    "artifacts": [
+      "validation-report.json",
+      "installer",
+      "submission-bundle"
+    ]
+  },
+  "acceptanceTest": [
+    "Every declared version in the matrix produced an installer.",
+    "The validation report lists zero blocking findings.",
+    "The privacy-policy URL in the manifest resolves with a 200."
+  ],
+  "maxTools": 6,
+  "tools": [
+    "validate_addin",
+    "build_all_versions",
+    "check_store_requirements",
+    "package_release"
+  ],
+  "services": [
+    "rule-service"
+  ],
+  "writes": [
+    {
+      "tool": "build_all_versions",
+      "previewTool": "validate_addin",
+      "blastRadius": "Overwrites build output. Reversible by rebuilding.",
+      "idempotencyKey": false
+    },
+    {
+      "tool": "package_release",
+      "previewTool": "check_store_requirements",
+      "blastRadius": "Writes installer, bundle and one audit record.",
+      "idempotencyKey": true
+    }
+  ],
+  "supportedVersions": [
+    "2023",
+    "2024",
+    "2025",
+    "2026",
+    "2027"
+  ],
+  "tokenBudget": {
+    "toolSurfaceTokens": 1180,
+    "medianRunTokens": 14200,
+    "medianTurns": 2
+  }
+}

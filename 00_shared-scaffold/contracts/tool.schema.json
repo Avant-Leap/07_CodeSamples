@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://avantleap.dev/as2698/tool.schema.json",
+  "title": "Tool definition",
+  "description": "What a tool must declare before it is allowed on a surface. Tool selection is a writing problem before it is a code problem — a model picks from the description, and no implementation quality recovers a vague one.",
+
+  "type": "object",
+  "required": ["name", "description", "inputSchema", "sideEffect"],
+  "additionalProperties": false,
+
+  "properties": {
+    "name": {
+      "description": "verb_noun, lower snake case, imperative. Where a server spans several resource families, prefix by resource so the model can tell them apart. Either way the name must disclose whether the call CREATES something.",
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*$",
+      "maxLength": 48
+    },
+
+    "description": {
+      "description": "EXACTLY THREE SENTENCES: what it does · when to use it · when NOT to use it. The third prevents mis-selection and is the one everyone omits — a model choosing between two plausible tools has nothing to separate them unless each says why it is not the other.",
+      "type": "object",
+      "required": ["what", "when", "whenNot"],
+      "additionalProperties": false,
+      "properties": {
+        "what": { "type": "string", "minLength": 10 },
+        "when": { "type": "string", "minLength": 10 },
+        "whenNot": { "type": "string", "minLength": 10 },
+        "requires": {
+          "description": "Preconditions, stated explicitly. Models call tools out of order unless the description forbids it.",
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "onPartialSuccess": {
+          "description": "What a half-success looks like, so the model reports it rather than claiming a clean run.",
+          "type": "string"
+        }
+      }
+    },
+
+    "inputSchema": {
+      "description": "Constrain as narrowly as the domain allows. A model will confidently produce a plausible value that does not exist — an enum catches that BEFORE the call, which is the cheapest place.",
+      "type": "object",
+      "required": ["type", "properties"],
+      "properties": {
+        "type": { "const": "object" },
+        "properties": { "type": "object" },
+        "required": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+
+    "sideEffect": {
+      "description": "read = no change. create = NOT safely repeatable, needs an idempotency key. update/delete = changes existing state, needs preview+confirm.",
+      "enum": ["read", "create", "update", "delete"]
+    },
+
+    "previewTool": {
+      "description": "Required when sideEffect is not 'read'. The partner tool that returns what WOULD change and nothing else.",
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*$"
+    },
+
+    "idempotencyKey": {
+      "description": "Required when sideEffect is 'create'. The caller supplies it, derived from INTENT — never random, never a timestamp. A random key is worse than no key, because it creates the appearance of protection.",
+      "type": "boolean"
+    },
+
+    "blastRadius": {
+      "description": "The worst outcome of one confirmed call, in plain language a non-engineer can weigh.",
+      "type": "string",
+      "minLength": 10
+    },
+
+    "timeoutMs": {
+      "description": "Every wait is bounded. An unbounded wait GUARANTEES the client timeout that causes a retry — which is how duplicate work happens.",
+      "type": "integer",
+      "minimum": 100
+    },
+
+    "failureTest": {
+      "description": "Path to the test asserting the FAILURE path. A tool without one is not done.",
+      "type": "string"
+    }
+  },
+
+  "examples": [
+    {
+      "name": "validate_addin",
+      "description": {
+        "what": "Checks a built add-in against the four rejection causes before submission.",
+        "when": "Use before packaging or submitting, and after any manifest or entitlement change.",
+        "whenNot": "Not for building. Call build_all_versions first if no output exists yet.",
+        "requires": ["A completed build for at least one target version"],
+        "onPartialSuccess": "Returns every finding it can reach even if one check errors; surface the warnings array rather than reporting a clean run."
+      },
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "productPath": { "type": "string" },
+          "targetVersions": {
+            "type": "array",
+            "items": { "enum": ["2023", "2024", "2025", "2026", "2027"] }
+          }
+        },
+        "required": ["productPath"]
+      },
+      "sideEffect": "read",
+      "blastRadius": "None. Reads files and makes one outbound HTTP HEAD request.",
+      "timeoutMs": 30000,
+      "failureTest": "tests/test_validate_addin_failures.py"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "$comment": "An explicit LIST, never a range expression, and never narrowed in a minor release.",
+  "supported": [
+    "2023",
+    "2024",
+    "2025",
+    "2026",
+    "2027"
+  ],
+  "default": "2026",
+  "targetFramework": {
+    "2023": "net48",
+    "2024": "net48",
+    "2025": "net8.0-windows",
+    "2026": "net8.0-windows",
+    "2027": "net8.0-windows"
+  }
+}

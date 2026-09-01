@@ -1,0 +1,10 @@
+workflow,exists,reversible,human_waits,per_month,people,six_tools,vendor_would_ship,blast_radius,notes
+Add-in release pipeline,y,y,y,8,4,y,n,none,"Four rejection causes, all machine-checkable"
+Proven graph library,y,y,y,20,12,y,n,bounded,Authoring shipped in Dynamo 4.0; promotion did not
+Parameter + standards compliance,y,y,y,15,20,y,n,high,Your standards are not a vendor product
+Model coordination / clash,y,y,y,8,10,n,n,high,Detection AND review — two processes in one surface
+Vault / PDM operations,y,y,y,40,25,y,n,high,Near-total public whitespace
+Derivative to automation chain,y,n,y,6,8,y,y,bounded,Their platform; samples already exist
+ACC / Docs / Build,y,y,y,30,40,y,y,high,Publicly stated intent to ship
+Desktop model bridge read-only,y,y,n,50,30,y,y,none,"Already shipped, free, flagships archived"
+Quarterly cost report,n,y,y,1,1,y,n,none,Does not exist yet and barely repeats

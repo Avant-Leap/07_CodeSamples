@@ -1,0 +1,27 @@
+{
+  "id": "kitchen-sink",
+  "version": "1.0.0",
+  "name": "Everything Server",
+  "description": "One surface for every job anybody has ever asked for.",
+  "trigger": "Any time.",
+  "owner": "Nobody in particular",
+  "deliverable": {
+    "kind": "report",
+    "artifacts": [
+      "something"
+    ]
+  },
+  "acceptanceTest": [],
+  "maxTools": 9,
+  "tools": [
+    "DeleteEverything",
+    "make_thing",
+    "a",
+    "b",
+    "c",
+    "d",
+    "e",
+    "f",
+    "g"
+  ]
+}

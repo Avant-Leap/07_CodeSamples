@@ -1,0 +1,54 @@
+{
+  "id": "p3-cloud-chain",
+  "version": "1.0.0",
+  "name": "Cloud Chain",
+  "description": "Resolve a model, produce a derivative, run an automation against it.",
+  "trigger": "A model is published and a downstream automation must run on it.",
+  "owner": "Project systems lead",
+  "deliverable": {
+    "kind": "artifact",
+    "artifacts": [
+      "derivative",
+      "automation output",
+      "job report"
+    ]
+  },
+  "acceptanceTest": [
+    "The named output exists in the target bucket for the resolved version.",
+    "Re-running with the same requestKey produces no second billable job.",
+    "A reviewer can trace the output back to a model version without reading logs."
+  ],
+  "maxTools": 6,
+  "tools": [
+    "model_get_metadata",
+    "model_export_derivative",
+    "automation_create_workitem",
+    "job_get_status"
+  ],
+  "services": [
+    "event-gateway",
+    "token-store"
+  ],
+  "writes": [
+    {
+      "tool": "model_export_derivative",
+      "previewTool": "model_get_metadata",
+      "blastRadius": "Starts a billable translation.",
+      "idempotencyKey": true
+    },
+    {
+      "tool": "automation_create_workitem",
+      "previewTool": "model_get_metadata",
+      "blastRadius": "Starts a billable work item.",
+      "idempotencyKey": true
+    }
+  ],
+  "supportedVersions": [
+    "2026-07-28"
+  ],
+  "tokenBudget": {
+    "toolSurfaceTokens": 1240,
+    "medianRunTokens": 21500,
+    "medianTurns": 3
+  }
+}

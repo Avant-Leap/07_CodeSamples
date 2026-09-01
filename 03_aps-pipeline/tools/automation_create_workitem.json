@@ -1,0 +1,44 @@
+{
+  "name": "automation_create_workitem",
+  "description": {
+    "what": "Submits one run of a named Activity alias, and returns a task handle.",
+    "when": "Use to execute a prepared automation against a resolved model.",
+    "whenNot": "Never to compose a job body, choose an engine or pass a command line. Only a declared Activity alias is accepted.",
+    "requires": [
+      "An Activity alias from the activities config",
+      "A model identifier"
+    ]
+  },
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "activityAlias": {
+        "enum": [
+          "cleanup.prod",
+          "export-sheets.prod",
+          "audit-params.prod"
+        ]
+      },
+      "urn": {
+        "type": "string"
+      },
+      "arguments": {
+        "type": "object"
+      },
+      "requestKey": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "activityAlias",
+      "urn",
+      "requestKey"
+    ]
+  },
+  "sideEffect": "create",
+  "previewTool": "model_get_metadata",
+  "idempotencyKey": true,
+  "blastRadius": "Starts a billable Design Automation work item. CREATE is in the name because the call is not safely repeatable.",
+  "timeoutMs": 30000,
+  "failureTest": "tests/test_automation_create_workitem.py"
+}

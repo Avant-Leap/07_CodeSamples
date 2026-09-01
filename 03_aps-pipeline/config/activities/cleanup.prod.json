@@ -1,0 +1,28 @@
+{
+  "$comment": "A tool exposes an ACTIVITY, never a job body. The moment an agent can compose one freely \u2014 engine, bundle, command line \u2014 you have shipped a remote code execution endpoint with a friendly name.",
+  "alias": "cleanup.prod",
+  "activityId": "AvantLeapCleanup+prod",
+  "engine": "Autodesk.Revit+2026",
+  "appBundleAlias": "cleanup.prod",
+  "description": "Runs the standard model cleanup job against one model version.",
+  "parameters": {
+    "inputFile": {
+      "verb": "get",
+      "required": true
+    },
+    "result": {
+      "verb": "put",
+      "required": true,
+      "localName": "result.rvt"
+    }
+  },
+  "arguments": {
+    "ruleSet": {
+      "enum": [
+        "standard",
+        "strict"
+      ],
+      "default": "standard"
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "$comment": "MEASURED, never defaulted. Too aggressive and you burn rate limit; too slow and a 20-second translation reports back in two minutes. TTL is the 95th percentile of real runs, not the mean \u2014 a task that quietly disappears is indistinguishable from one that failed.",
+  "jobTypes": {
+    "translation.svf2": {
+      "pollIntervalMs": 5000,
+      "ttlMs": 900000,
+      "p95Ms": 780000,
+      "samples": 240
+    },
+    "translation.ifc": {
+      "pollIntervalMs": 8000,
+      "ttlMs": 1800000,
+      "p95Ms": 1560000,
+      "samples": 96
+    },
+    "workitem.cleanup": {
+      "pollIntervalMs": 10000,
+      "ttlMs": 2700000,
+      "p95Ms": 2280000,
+      "samples": 61
+    }
+  }
+}

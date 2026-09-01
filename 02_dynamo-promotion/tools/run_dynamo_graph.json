@@ -1,0 +1,46 @@
+{
+  "name": "run_dynamo_graph",
+  "description": {
+    "what": "Runs a saved Dynamo graph against the open Revit model.",
+    "when": "Use when the user asks to apply a standard process the firm has already scripted \u2014 renumbering, tagging, parameter population, export.",
+    "whenNot": "Not for creating a new graph, and not for a graph absent from the catalogue.",
+    "requires": [
+      "A graph path from list_dynamo_packages",
+      "A Revit document must be open"
+    ],
+    "onPartialSuccess": "Returns the count that worked and the list that did not, with reasons. A warnings array is present on partial success \u2014 surface it rather than reporting a clean run."
+  },
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "graphPath": {
+        "type": "string"
+      },
+      "inputs": {
+        "type": "object"
+      },
+      "timeoutSeconds": {
+        "type": "integer",
+        "minimum": 5,
+        "maximum": 3600
+      },
+      "confirmToken": {
+        "type": "string"
+      },
+      "requestKey": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "graphPath",
+      "confirmToken",
+      "requestKey"
+    ]
+  },
+  "sideEffect": "create",
+  "previewTool": "get_graph_outputs",
+  "idempotencyKey": true,
+  "blastRadius": "Whatever the graph does to the open model. Bounded by the graph, not by this tool \u2014 which is why only catalogued graphs are runnable.",
+  "timeoutMs": 300000,
+  "failureTest": "tests/test_run_dynamo_graph.py"
+}

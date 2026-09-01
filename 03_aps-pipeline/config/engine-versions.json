@@ -1,0 +1,9 @@
+{
+  "$comment": "An enum, never a free string. A model will confidently invent a plausible engine version that does not exist.",
+  "engines": [
+    "Autodesk.Revit+2024",
+    "Autodesk.Revit+2025",
+    "Autodesk.Revit+2026"
+  ],
+  "default": "Autodesk.Revit+2026"
+}

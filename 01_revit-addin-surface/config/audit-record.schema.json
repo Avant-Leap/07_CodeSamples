@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Audit record",
+  "description": "Written BEFORE the tool returns, append-only. Note what is deliberately absent: which agent or model made the call. The protocol authenticates the HOST, not the agent, so any agent identity would be a guess \u2014 and recording a guess is worse than recording nothing.",
+  "type": "object",
+  "required": [
+    "timestamp",
+    "processId",
+    "processVersion",
+    "tool",
+    "host",
+    "hostVersion",
+    "subject",
+    "itemCount"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "processId": {
+      "type": "string"
+    },
+    "processVersion": {
+      "type": "string"
+    },
+    "tool": {
+      "type": "string"
+    },
+    "host": {
+      "type": "string"
+    },
+    "hostVersion": {
+      "type": "string"
+    },
+    "subject": {
+      "type": "string"
+    },
+    "itemCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "requestKey": {
+      "type": "string"
+    },
+    "confirmToken": {
+      "type": "string"
+    }
+  }
+}

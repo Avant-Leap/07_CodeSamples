@@ -1,0 +1,49 @@
+{
+  "id": "p2-graph-catalogue",
+  "version": "1.0.0",
+  "name": "Graph Catalogue",
+  "description": "Discover, inspect and run approved Dynamo graphs.",
+  "trigger": "A user asks for a standard process the firm has already scripted.",
+  "owner": "BIM coordinator",
+  "deliverable": {
+    "kind": "model-change",
+    "artifacts": [
+      "run-report.json",
+      "changes in the open model"
+    ]
+  },
+  "acceptanceTest": [
+    "The run report names every item changed and every item skipped, with a reason.",
+    "A reviewer can confirm the change in the model without reading the graph.",
+    "Re-running with the same requestKey produces no second set of changes."
+  ],
+  "maxTools": 6,
+  "tools": [
+    "list_dynamo_packages",
+    "get_graph_outputs",
+    "run_dynamo_graph"
+  ],
+  "services": [
+    "bridge"
+  ],
+  "writes": [
+    {
+      "tool": "run_dynamo_graph",
+      "previewTool": "get_graph_outputs",
+      "blastRadius": "Whatever the catalogued graph does to the open model.",
+      "idempotencyKey": true
+    }
+  ],
+  "supportedVersions": [
+    "2023",
+    "2024",
+    "2025",
+    "2026",
+    "2027"
+  ],
+  "tokenBudget": {
+    "toolSurfaceTokens": 860,
+    "medianRunTokens": 9100,
+    "medianTurns": 2
+  }
+}

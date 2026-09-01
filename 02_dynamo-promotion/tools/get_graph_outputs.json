@@ -1,0 +1,26 @@
+{
+  "name": "get_graph_outputs",
+  "description": {
+    "what": "Declares what one graph will produce, and what inputs it requires.",
+    "when": "Use when the user needs to know what will happen before anything runs.",
+    "whenNot": "Not for discovery. Get the path from list_dynamo_packages first.",
+    "requires": [
+      "A graph path from list_dynamo_packages"
+    ]
+  },
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "graphPath": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "graphPath"
+    ]
+  },
+  "sideEffect": "read",
+  "blastRadius": "None. Parses the graph header.",
+  "timeoutMs": 10000,
+  "failureTest": "tests/test_get_graph_outputs.py"
+}

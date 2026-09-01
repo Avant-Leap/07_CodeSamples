@@ -1,0 +1,47 @@
+{
+  "name": "build_all_versions",
+  "description": {
+    "what": "Compiles the add-in once per version in the declared matrix.",
+    "when": "Use when source has changed, or before packaging a release.",
+    "whenNot": "Not for validating. It reports compiler errors, not submission findings.",
+    "requires": [
+      "A clean working tree",
+      "The .NET SDK on the build host"
+    ]
+  },
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "productPath": {
+        "type": "string"
+      },
+      "versions": {
+        "type": "array",
+        "items": {
+          "enum": [
+            "2023",
+            "2024",
+            "2025",
+            "2026",
+            "2027"
+          ]
+        }
+      },
+      "configuration": {
+        "enum": [
+          "Debug",
+          "Release"
+        ]
+      }
+    },
+    "required": [
+      "productPath"
+    ]
+  },
+  "sideEffect": "update",
+  "previewTool": "validate_addin",
+  "idempotencyKey": false,
+  "blastRadius": "Overwrites build output for the named product. Reversible by rebuilding.",
+  "timeoutMs": 900000,
+  "failureTest": "tests/test_build_all_versions.py"
+}

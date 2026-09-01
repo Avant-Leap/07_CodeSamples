@@ -1,0 +1,41 @@
+{
+  "$comment": "Which of the six promotion layers are generated and which are authored. Two come from the graph, one is translated, and three are things a graph structurally cannot carry \u2014 which is exactly what separates a script from something a firm can warrant.",
+  "layers": [
+    {
+      "layer": "manifest",
+      "source": "graph",
+      "generated": true,
+      "from": "graph name, purpose, author description"
+    },
+    {
+      "layer": "contract",
+      "source": "graph",
+      "generated": true,
+      "from": "input nodes \u2014 already named and typed"
+    },
+    {
+      "layer": "core",
+      "source": "translated",
+      "generated": true,
+      "from": "node sequence read as dependency order"
+    },
+    {
+      "layer": "envelope",
+      "source": "new",
+      "generated": true,
+      "why": "graphs half-succeed by design and report it in a warning nobody reads"
+    },
+    {
+      "layer": "guard",
+      "source": "new",
+      "generated": true,
+      "why": "a graph run by a human HAS a human as its guard. Remove the human and you must replace them"
+    },
+    {
+      "layer": "proof",
+      "source": "new",
+      "generated": false,
+      "why": "if you cannot write the acceptance test, the graph has not earned promotion, whatever its run count says"
+    }
+  ]
+}

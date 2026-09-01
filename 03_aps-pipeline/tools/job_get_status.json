@@ -1,0 +1,26 @@
+{
+  "name": "job_get_status",
+  "description": {
+    "what": "Polls a task handle returned by a long-running tool.",
+    "when": "Use after any tool that returned a taskId, at the interval it told you to use.",
+    "whenNot": "Not a substitute for the event gateway. Do not poll faster than pollIntervalMs.",
+    "requires": [
+      "A taskId from model_export_derivative or automation_create_workitem"
+    ]
+  },
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "taskId": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "taskId"
+    ]
+  },
+  "sideEffect": "read",
+  "blastRadius": "None. Read-only status.",
+  "timeoutMs": 15000,
+  "failureTest": "tests/test_job_get_status.py"
+}

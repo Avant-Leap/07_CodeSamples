@@ -1,0 +1,42 @@
+{
+  "name": "package_release",
+  "description": {
+    "what": "Produces the installer and the submission bundle for one release.",
+    "when": "Use once validation passes and every declared version has built.",
+    "whenNot": "Not for a work-in-progress build. It stamps a version and writes an audit record.",
+    "requires": [
+      "validate_addin returned zero blocking findings",
+      "A confirm token from check_store_requirements"
+    ]
+  },
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "productPath": {
+        "type": "string"
+      },
+      "releaseVersion": {
+        "type": "string",
+        "pattern": "^[0-9]+[.][0-9]+[.][0-9]+$"
+      },
+      "confirmToken": {
+        "type": "string"
+      },
+      "requestKey": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "productPath",
+      "releaseVersion",
+      "confirmToken",
+      "requestKey"
+    ]
+  },
+  "sideEffect": "create",
+  "previewTool": "check_store_requirements",
+  "idempotencyKey": true,
+  "blastRadius": "Writes an installer and bundle to the release directory, and one audit record. No model, no remote system.",
+  "timeoutMs": 600000,
+  "failureTest": "tests/test_package_release.py"
+}

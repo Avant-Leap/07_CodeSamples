@@ -1,0 +1,34 @@
+{
+  "name": "model_get_metadata",
+  "description": {
+    "what": "Resolves a hub, project, folder, item and version down to a single model identifier.",
+    "when": "Use first in any cloud chain \u2014 the other tools take the identifier this returns.",
+    "whenNot": "Not for translating or downloading. It returns identity and metadata only.",
+    "requires": [
+      "An access token with data:read for the target project"
+    ]
+  },
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "projectId": {
+        "type": "string"
+      },
+      "itemId": {
+        "type": "string"
+      },
+      "versionNumber": {
+        "type": "integer",
+        "minimum": 1
+      }
+    },
+    "required": [
+      "projectId",
+      "itemId"
+    ]
+  },
+  "sideEffect": "read",
+  "blastRadius": "None. Read-only against Data Management.",
+  "timeoutMs": 20000,
+  "failureTest": "tests/test_model_get_metadata.py"
+}

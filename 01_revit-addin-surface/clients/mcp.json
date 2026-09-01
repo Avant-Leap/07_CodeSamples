@@ -1,0 +1,17 @@
+{
+  "$comment": "Drop into claude_desktop_config.json or .mcp.json and replace <ABSOLUTE>. For a shipped server point `command` at the published exe instead of `dotnet run` -- the SDK is a build-time dependency, not a runtime one.",
+  "mcpServers": {
+    "release-gate": {
+      "command": "dotnet",
+      "args": [
+        "run",
+        "--project",
+        "<ABSOLUTE>/07_CodeSamples/01_revit-addin-surface/host_csharp",
+        "--",
+        "serve",
+        "<ABSOLUTE>/07_CodeSamples/01_revit-addin-surface",
+        "p8-addin-release-gate"
+      ]
+    }
+  }
+}

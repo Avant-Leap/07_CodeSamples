@@ -1,0 +1,42 @@
+{
+  "name": "model_export_derivative",
+  "description": {
+    "what": "Starts a translation and returns a task handle \u2014 it never blocks waiting for the result.",
+    "when": "Use when a downstream step needs a derivative that does not exist yet.",
+    "whenNot": "Not for reading an existing derivative, and never inside a loop that waits on it.",
+    "requires": [
+      "A model identifier from model_get_metadata"
+    ]
+  },
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "urn": {
+        "type": "string"
+      },
+      "outputFormat": {
+        "enum": [
+          "svf2",
+          "obj",
+          "stl",
+          "ifc",
+          "step"
+        ]
+      },
+      "requestKey": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "urn",
+      "outputFormat",
+      "requestKey"
+    ]
+  },
+  "sideEffect": "create",
+  "previewTool": "model_get_metadata",
+  "idempotencyKey": true,
+  "blastRadius": "Starts a billable translation job. A duplicate call without a stable requestKey runs and bills it twice.",
+  "timeoutMs": 30000,
+  "failureTest": "tests/test_model_export_derivative.py"
+}

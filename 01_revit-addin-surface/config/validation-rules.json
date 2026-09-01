@@ -1,0 +1,51 @@
+{
+  "$comment": "The four causes that got real submissions rejected. DATA, not code \u2014 changing a rule is a pull request against this file, reviewable by someone who does not write C#.",
+  "rules": [
+    {
+      "id": "version-format",
+      "severity": "blocking",
+      "description": "Manifest version and assembly version must match the expected pattern.",
+      "check": "regex",
+      "pattern": "^[0-9]+[.][0-9]+[.][0-9]+$",
+      "sources": [
+        "manifest.version",
+        "assembly.AssemblyVersion"
+      ],
+      "failureMessage": "Version format mismatch between manifest and assembly."
+    },
+    {
+      "id": "entitlement-consistency",
+      "severity": "blocking",
+      "description": "Entitlement claimed in the .addin must match the configured entitlement.",
+      "check": "diff",
+      "sources": [
+        ".addin/entitlement",
+        "entitlement.config/id"
+      ],
+      "failureMessage": "Claimed entitlement differs from configured entitlement."
+    },
+    {
+      "id": "installer-privilege",
+      "severity": "blocking",
+      "description": "Installer requested privilege level must match the declared configuration.",
+      "check": "equals",
+      "sources": [
+        "installer.manifest/requestedExecutionLevel",
+        "product.config/privilege"
+      ],
+      "failureMessage": "Installer privilege level does not match the declared configuration."
+    },
+    {
+      "id": "privacy-url-resolves",
+      "severity": "blocking",
+      "description": "The privacy-policy URL must resolve. One missing character has cost a full review cycle.",
+      "check": "http-head",
+      "sources": [
+        "manifest.privacyPolicyUrl"
+      ],
+      "expectStatus": 200,
+      "timeoutMs": 10000,
+      "failureMessage": "Privacy-policy URL did not return 200."
+    }
+  ]
+}

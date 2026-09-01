@@ -1,0 +1,28 @@
+{
+  "name": "list_dynamo_packages",
+  "description": {
+    "what": "Returns the catalogue of graphs the firm has approved, with plain-language descriptions.",
+    "when": "Use first, whenever the user asks what automation exists or names a process loosely.",
+    "whenNot": "Not for running anything. It returns descriptions and paths only."
+  },
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "filterCategory": {
+        "enum": [
+          "documentation",
+          "modelling",
+          "coordination",
+          "analysis",
+          "export",
+          "any"
+        ]
+      }
+    },
+    "required": []
+  },
+  "sideEffect": "read",
+  "blastRadius": "None. Reads the catalogue file.",
+  "timeoutMs": 5000,
+  "failureTest": "tests/test_list_dynamo_packages.py"
+}

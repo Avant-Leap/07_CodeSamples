@@ -1,0 +1,17 @@
+{
+  "name": "make_thing",
+  "description": {
+    "what": "Creates a thing in the model.",
+    "when": "Use when the user asks for a thing."
+  },
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "kind": {
+        "type": "string"
+      }
+    }
+  },
+  "sideEffect": "create",
+  "previewTool": "preview_thing"
+}
